@@ -1,0 +1,12 @@
+import express from 'express';import cors from 'cors';import path from 'path';import {fileURLToPath} from 'url';
+import {notFound,errorHandler} from './middleware/errorMiddleware.js';
+import auth from './routes/authRoutes.js';import dashboard from './routes/dashboardRoutes.js';import customers from './routes/customerRoutes.js';import surveys from './routes/surveyRoutes.js';
+import packages from './routes/packageRoutes.js';import quotations from './routes/quotationRoutes.js';import payments from './routes/paymentRoutes.js';import inventory from './routes/inventoryRoutes.js';
+import dispatch from './routes/dispatchRoutes.js';import installations from './routes/installationRoutes.js';import technicians from './routes/technicianRoutes.js';import warranty from './routes/warrantyRoutes.js';
+import tickets from './routes/ticketRoutes.js';import finance from './routes/financeRoutes.js';import subsidy from './routes/subsidyRoutes.js';
+const app=express();const here=path.dirname(fileURLToPath(import.meta.url));
+app.use(cors({origin:process.env.CLIENT_URL||'http://localhost:5173'}));app.use(express.json({limit:'1mb'}));
+app.use('/uploads',express.static(path.join(here,'../../uploads')));
+app.get('/api/health',(q,r)=>r.json({ok:true}));
+Object.entries({auth,dashboard,customers,surveys,packages,quotations,payments,inventory,dispatch,installations,technicians,warranty,tickets,finance,subsidy}).forEach(([k,v])=>app.use(`/api/${k}`,v));
+app.use(notFound);app.use(errorHandler);export default app;
